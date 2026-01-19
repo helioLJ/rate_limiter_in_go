@@ -3,7 +3,7 @@
 A production-ready distributed rate limiter for APIs using a Redis-backed token bucket.
 Includes a Gin middleware and a reverse-proxy sidecar for protecting upstream services.
 
-![Terminal demo](assets/terminal-demo.svg)
+![Terminal demo](assets/terminal-demo.gif)
 
 ## Requirements
 
