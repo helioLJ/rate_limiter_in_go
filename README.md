@@ -3,6 +3,8 @@
 A production-ready distributed rate limiter for APIs using a Redis-backed token bucket.
 Includes a Gin middleware and a reverse-proxy sidecar for protecting upstream services.
 
+![Terminal demo](assets/terminal-demo.svg)
+
 ## Requirements
 
 - Go 1.23+
@@ -28,6 +30,46 @@ curl -i http://localhost:8080/hello
 ```bash
 go run ./cmd/api
 go run ./cmd/proxy
+```
+
+## Usage examples
+
+### Curl examples
+
+```bash
+# Default key: Client IP or X-API-Key header
+curl -i http://localhost:8080/hello
+
+# Use a stable key for tests
+curl -i -H "X-API-Key: demo-user" http://localhost:8080/hello
+```
+
+Example response headers:
+
+```
+HTTP/1.1 200 OK
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 99
+X-RateLimit-Reset: 1768835901
+```
+
+### Triggering a 429
+
+```bash
+hey -n 200 -c 20 http://localhost:8080/hello
+```
+
+Expected status code distribution (sample):
+
+```
+[200] 46 responses
+[429] 154 responses
+```
+
+### Run the API directly (without proxy)
+
+```bash
+curl -i http://localhost:8081/hello
 ```
 
 ## Configuration (defaults)
