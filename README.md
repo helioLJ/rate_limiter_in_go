@@ -5,6 +5,27 @@ Includes a Gin middleware and a reverse-proxy sidecar for protecting upstream se
 
 ![Terminal demo](assets/terminal-demo.svg)
 
+## What this project does
+
+This project protects your APIs from abuse by limiting each user (or client) to a fixed
+number of requests per time window. It runs in two modes:
+
+- Middleware: attach to a Gin API for in-process rate limiting.
+- Sidecar/Proxy: run as a reverse proxy in front of any upstream service.
+
+State is shared via Redis, so limits apply consistently across replicas.
+
+## How it works
+
+The limiter implements a token bucket algorithm stored in Redis via a Lua script:
+
+- Each key has a bucket with `capacity = limit + burst`.
+- Tokens refill continuously over the `window` duration.
+- Each request consumes one token; if the bucket is empty, the request is rejected.
+- The Lua script runs atomically to avoid race conditions across concurrent requests.
+
+The Lua script also sets a TTL on each key so inactive users expire from Redis.
+
 ## Requirements
 
 - Go 1.23+
@@ -53,6 +74,12 @@ X-RateLimit-Remaining: 99
 X-RateLimit-Reset: 1768835901
 ```
 
+Header meanings:
+
+- `X-RateLimit-Limit`: bucket capacity (limit + burst)
+- `X-RateLimit-Remaining`: tokens left for the current key
+- `X-RateLimit-Reset`: Unix timestamp when the bucket is expected to be full again
+
 ### Triggering a 429
 
 ```bash
@@ -94,6 +121,12 @@ curl -i http://localhost:8081/hello
 ## Architecture
 
 ![Architecture diagram](assets/architecture.svg)
+
+## Behavior details
+
+- Key selection: `X-API-Key` header, then `Authorization`, then client IP.
+- Failure mode: `FAIL_MODE=open` allows traffic on Redis errors; `closed` blocks.
+- Thread safety: Redis + Lua ensure atomic updates across instances.
 
 ## Dependencies
 
