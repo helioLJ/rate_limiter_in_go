@@ -3,7 +3,7 @@
 A production-ready distributed rate limiter for APIs using a Redis-backed token bucket.
 Includes a Gin middleware and a reverse-proxy sidecar for protecting upstream services.
 
-![Terminal demo](assets/terminal-demo.gif)
+![Terminal demo](assets/terminal-demo.svg)
 
 ## Requirements
 
@@ -90,6 +90,10 @@ curl -i http://localhost:8081/hello
 - `cmd/proxy`: reverse proxy sidecar
 - `internal/ratelimiter`: token bucket + Redis Lua
 - `middleware/gin`: Gin middleware adapter
+
+## Architecture
+
+![Architecture diagram](assets/architecture.svg)
 
 ## Dependencies
 

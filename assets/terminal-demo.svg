@@ -12,19 +12,17 @@
   <circle cx="86" cy="44" r="6" fill="#22c55e" />
   <text x="120" y="50" fill="#9ca3af" font-family="Menlo, Consolas, monospace" font-size="14">rate_limiter_in_go - demo</text>
 
-  <text x="48" y="90" fill="#93c5fd" font-family="Menlo, Consolas, monospace" font-size="16">$ docker compose up -d</text>
-  <text x="48" y="120" fill="#cbd5f5" font-family="Menlo, Consolas, monospace" font-size="14">[+] Running 3/3  redis  api  proxy</text>
+  <text x="48" y="90" fill="#93c5fd" font-family="Menlo, Consolas, monospace" font-size="16">$ hey -n 200 -c 20 http://localhost:8080/hello</text>
 
-  <text x="48" y="165" fill="#93c5fd" font-family="Menlo, Consolas, monospace" font-size="16">$ curl -i http://localhost:8080/hello</text>
-  <text x="48" y="195" fill="#cbd5f5" font-family="Menlo, Consolas, monospace" font-size="14">HTTP/1.1 200 OK</text>
-  <text x="48" y="215" fill="#cbd5f5" font-family="Menlo, Consolas, monospace" font-size="14">X-RateLimit-Limit: 100</text>
-  <text x="48" y="235" fill="#cbd5f5" font-family="Menlo, Consolas, monospace" font-size="14">X-RateLimit-Remaining: 99</text>
-  <text x="48" y="255" fill="#cbd5f5" font-family="Menlo, Consolas, monospace" font-size="14">{"message":"hello"}</text>
+  <text x="48" y="130" fill="#cbd5f5" font-family="Menlo, Consolas, monospace" font-size="14">Summary:</text>
+  <text x="48" y="150" fill="#cbd5f5" font-family="Menlo, Consolas, monospace" font-size="14">  Total:        0.0355 secs</text>
+  <text x="48" y="170" fill="#cbd5f5" font-family="Menlo, Consolas, monospace" font-size="14">  Requests/sec: 5632.65</text>
 
-  <text x="48" y="300" fill="#93c5fd" font-family="Menlo, Consolas, monospace" font-size="16">$ hey -n 200 -c 20 http://localhost:8080/hello</text>
-  <text x="48" y="330" fill="#cbd5f5" font-family="Menlo, Consolas, monospace" font-size="14">Status code distribution: [200] 46 responses  [429] 154 responses</text>
+  <text x="48" y="210" fill="#cbd5f5" font-family="Menlo, Consolas, monospace" font-size="14">Status code distribution:</text>
+  <text x="48" y="230" fill="#cbd5f5" font-family="Menlo, Consolas, monospace" font-size="14">  [200] 46 responses</text>
+  <text x="48" y="250" fill="#fca5a5" font-family="Menlo, Consolas, monospace" font-size="14">  [429] 154 responses</text>
 
-  <text x="48" y="380" fill="#93c5fd" font-family="Menlo, Consolas, monospace" font-size="16">$ curl -i http://localhost:8080/hello</text>
-  <text x="48" y="410" fill="#fca5a5" font-family="Menlo, Consolas, monospace" font-size="14">HTTP/1.1 429 Too Many Requests</text>
-  <text x="48" y="430" fill="#fca5a5" font-family="Menlo, Consolas, monospace" font-size="14">Retry-After: 1</text>
+  <text x="48" y="300" fill="#93c5fd" font-family="Menlo, Consolas, monospace" font-size="16">$ curl -i http://localhost:8080/hello</text>
+  <text x="48" y="330" fill="#fca5a5" font-family="Menlo, Consolas, monospace" font-size="14">HTTP/1.1 429 Too Many Requests</text>
+  <text x="48" y="350" fill="#fca5a5" font-family="Menlo, Consolas, monospace" font-size="14">Retry-After: 1</text>
 </svg>
