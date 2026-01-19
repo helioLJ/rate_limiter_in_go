@@ -5,27 +5,28 @@ Includes a Gin middleware and a reverse-proxy sidecar for protecting upstream se
 
 ## Requirements
 
-- Go 1.21+
+- Go 1.23+
 - Redis 6+
-- Docker (optional, for local Redis)
+- Docker (optional, for local Redis + proxy)
 
 ## Quick start
 
-1) Start Redis:
+1) Start the stack (Redis + API + Proxy):
 
 ```bash
-docker compose up -d redis
+docker compose up -d
 ```
 
-2) Run the API (will be added in subsequent steps):
+2) Call the proxy (rate-limited):
+
+```bash
+curl -i http://localhost:8080/hello
+```
+
+3) Run locally without Docker (optional):
 
 ```bash
 go run ./cmd/api
-```
-
-3) Run the proxy (optional):
-
-```bash
 go run ./cmd/proxy
 ```
 
@@ -37,9 +38,11 @@ go run ./cmd/proxy
 - `REDIS_ADDR`: `localhost:6379`
 - `FAIL_MODE`: `open` (allow on Redis errors) or `closed`
 - `KEY_HEADER`: `X-API-Key`
+- `LISTEN_ADDR`: `:8081` (API only)
+- `PROXY_LISTEN_ADDR`: `:8080` (proxy only)
 - `UPSTREAM_URL`: `http://localhost:8081` (proxy only)
 
-## Project layout (planned)
+## Project layout
 
 - `cmd/api`: sample Gin API
 - `cmd/proxy`: reverse proxy sidecar
@@ -57,4 +60,10 @@ go run ./cmd/proxy
 gofmt -w .
 go vet ./...
 go test ./...
+```
+
+## Integration test (Redis required)
+
+```bash
+REDIS_ADDR=localhost:6379 go test ./internal/ratelimiter -run TestRedisLimiterAllow
 ```

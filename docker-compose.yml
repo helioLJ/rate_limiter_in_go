@@ -4,3 +4,25 @@ services:
     ports:
       - "6379:6379"
     command: ["redis-server", "--save", "", "--appendonly", "no"]
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      REDIS_ADDR: redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+  proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.proxy
+    environment:
+      REDIS_ADDR: redis:6379
+      UPSTREAM_URL: http://api:8081
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+      - api
