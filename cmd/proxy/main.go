@@ -80,10 +80,7 @@ func main() {
 		setRateLimitHeaders(w, res)
 
 		if !res.Allowed {
-			retryAfter := int64(res.RetryAfter.Seconds())
-			if retryAfter < 1 {
-				retryAfter = 1
-			}
+			retryAfter := max(int64(res.RetryAfter.Seconds()), 1)
 			w.Header().Set("Retry-After", fmt.Sprintf("%d", retryAfter))
 			http.Error(w, "rate limit exceeded", http.StatusTooManyRequests)
 			return

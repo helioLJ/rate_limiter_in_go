@@ -47,10 +47,7 @@ func GinMiddleware(limiter ratelimiter.Limiter, keyFunc KeyFunc, opts Options) g
 		setRateLimitHeaders(c, res)
 
 		if !res.Allowed {
-			retryAfter := int64(res.RetryAfter.Seconds())
-			if retryAfter < 1 {
-				retryAfter = 1
-			}
+			retryAfter := max(int64(res.RetryAfter.Seconds()), 1)
 			c.Header("Retry-After", fmt.Sprintf("%d", retryAfter))
 			respondError(c, http.StatusTooManyRequests, "rate limit exceeded")
 			return
